@@ -3,26 +3,37 @@ import folium
 import requests
 import numpy as np
 
-bike_data = pd.read_csv("Divvy_Trips_2018_06.csv")
+# shadowing bad?
+def get_and_format_bike_data(csv_string):
+    bike_data = pd.read_csv(csv_string)
 
-#this stuff below might not be necessary if not doing stuff with time
+    #this time below might not be necessary if not working  with time
 
-bike_data["start_time"] = pd.to_datetime(bike_data["start_time"])
-bike_data["end_time"] = pd.to_datetime(bike_data["end_time"])
-bike_data["hour"] = bike_data["start_time"].map(lambda x: x.hour)
+    bike_data["start_time"] = pd.to_datetime(bike_data["start_time"])
+    bike_data["end_time"] = pd.to_datetime(bike_data["end_time"])
+    bike_data["hour"] = bike_data["start_time"].map(lambda x: x.hour) #what is this lambda expression doing?
+    bike_data['start_station_longitude'] = np.nan
+    bike_data['start_station_latitude'] = np.nan
+    bike_data['end_station_longitude'] = np.nan
+    bike_data['end_station_latitude'] = np.nan
+    return bike_data
 
-response = requests.get('https://feeds.divvybikes.com/stations/stations.json')
+#async programming in Python?
 
-station_data = response.json()
-station_list = station_data['stationBeanList']
-station_data_frame = pd.DataFrame.from_records(station_list, index='id')
+bike_data = get_and_format_bike_data("Divvy_Trips_2018_06.csv")
 
-bike_data['start_station_longitude'] = np.nan
-bike_data['start_station_latitude'] = np.nan
-bike_data['end_station_longitude'] = np.nan
-bike_data['end_station_latitude'] = np.nan
+def get_station_list():
+    response = requests.get('https://feeds.divvybikes.com/stations/stations.json')
 
-#need a way to weed out the bike trips that are not from current stations...
+    station_data = response.json()
+    station_list = station_data['stationBeanList']
+    station_data_frame = pd.DataFrame.from_records(station_list, index='id')
+    return station_data_frame
+
+
+station_data_frame = get_station_list()
+# need a way to weed out the bike trips that are not from current stations...
+
 
 def add_location_to_bike_trips(bike_data, station_data_frame):
     for index, row in bike_data.iterrows():
@@ -40,31 +51,29 @@ def add_location_to_bike_trips(bike_data, station_data_frame):
         bike_data.at[index, 'end_station_longitude'] = end_station_info.longitude
     return bike_data
 
-#lat_and_lon = add_location_to_bike_trips(bike_data, station_data_frame)
-#print(lat_and_lon.head(10))
 
-#now I want to do a count....so, count the rows and then add that to the station id
+def add_counts_to_stations(station_data_frame, bike_data):
+    departure_counts = bike_data.groupby('from_station_id').count()
+    departure_counts = departure_counts.iloc[:, [0]] # so this does something magical....
+    departure_counts.columns = ['Departure Count']
 
-#this is a new data frame
-departure_counts = bike_data.groupby('from_station_id').count()
-departure_counts = departure_counts.iloc[:, [0]] # so this does something magical....
-departure_counts.columns = ['Departure Count']
+    arrival_counts = bike_data.groupby('to_station_id').count()
+    arrival_counts = arrival_counts.iloc[:, [0]]
+    arrival_counts.columns = ['Arrival Count']
 
-#this is also a new data frame
-arrival_counts = bike_data.groupby('to_station_id').count()
-arrival_counts = arrival_counts.iloc[:, [0]]
-arrival_counts.columns = ['Arrival Count']
+    station_data_frame['Arrival Count'] = np.nan
+    station_data_frame['Departure Count'] = np.nan
 
+    for index, row in station_data_frame.iterrows():
+        try:
+            station_data_frame.at[index, 'Departure Count'] = departure_counts.at[index, 'Departure Count']
+            station_data_frame.at[index, 'Arrival Count'] = arrival_counts.at[index, 'Arrival Count']
+        except:
+            print('key error')
+    return station_data_frame
 
-station_data_frame['Arrival Count'] = np.nan
-station_data_frame['Departure Count'] = np.nan
+station_data_frame = add_counts_to_stations(station_data_frame, bike_data)
 
-for index, row in station_data_frame.iterrows():
-    try:
-        station_data_frame.at[index, 'Departure Count'] = departure_counts.at[index, 'Departure Count']
-        station_data_frame.at[index, 'Arrival Count'] = arrival_counts.at[index, 'Arrival Count']
-    except:
-        print('key error')
 
 def put_stations_and_counts_on_map(station_list):
     folium_map = folium.Map(location=[41.88, -87.62],
@@ -82,23 +91,6 @@ def put_stations_and_counts_on_map(station_list):
 
 map = put_stations_and_counts_on_map(station_data_frame)
 
-def count_trips_and_add_to_station(bike_data, station_data):
-    locations = bike_data.groupby('from_station_id').first()  # not sure what this code is really doing
-    locations = locations.loc[:, ["Start Station Latitude",
-                                  "Start Station Longitude",
-                                  "Start Station Name"]]  # and here is where I'm going to need to figure out how
-    # to join the data that I have with this data
-
-    departure_counts = locations.groupby('from_station_id').count()
-    departure_counts = departure_counts.iloc[:, [0]]  # again, no idea what this is doing right now
-    departure_counts.columns = ['Departure Count']
-
-    arrival_counts = locations.groupby('to_station_id').count.iloc[:, [0]]
-    arrival_counts.columns = ['Arrival Count']
-
-    trip_counts = departure_counts.join(locations).join(arrival_counts)
-    return trip_counts
-
 
 def put_stations_on_map(station_list):
     folium_map = folium.Map(location=[41.88, -87.62],
@@ -109,6 +101,4 @@ def put_stations_on_map(station_list):
     folium_map.save("marker_map.html")
     return folium_map
 
-
-marker_map = put_stations_on_map(station_list)
 
