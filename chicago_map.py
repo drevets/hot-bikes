@@ -44,7 +44,6 @@ def add_location_to_bike_trips(bike_data, station_data_frame):
             start_station_info = station_data_frame.loc[start_station, ['latitude', 'longitude']]
         except:
             print('start or end station not found')
-            continue
         bike_data.at[index, 'start_station_longitude'] = start_station_info.longitude
         bike_data.at[index, 'start_station_latitude'] = start_station_info.latitude
         bike_data.at[index, 'end_station_longitude'] = end_station_info.longitude
