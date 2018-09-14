@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ae8ba817-b294-4475-a78f-e476614feeaf" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chicago_map.py" beforeDir="false" afterPath="$PROJECT_DIR$/chicago_map.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/marker_map.html" beforeDir="false" afterPath="$PROJECT_DIR$/marker_map.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -51,13 +51,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/chicago_map.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="22" lean-forward="true" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
+            <state relative-caret-position="135">
+              <caret line="9" column="33" selection-start-line="9" selection-start-column="33" selection-end-line="9" selection-end-column="33" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
-                <marker date="1536886281044" expanded="true" signature="1185:1186" ph="..." />
-                <marker date="1536886281044" expanded="true" signature="3903:4734" ph="..." />
-                <marker date="1536886281044" expanded="true" signature="5226:6101" ph="..." />
+                <marker date="1536887481198" expanded="true" signature="939:940" ph="..." />
+                <marker date="1536887481198" expanded="true" signature="3657:4488" ph="..." />
               </folding>
             </state>
           </provider>
@@ -222,18 +221,18 @@
     <frame x="40" y="23" width="1400" height="780" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49440297" visible="true" weight="0.24945612" />
-      <window_info id="Structure" order="1" sideWeight="0.505597" side_tool="true" visible="true" weight="0.24945612" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49388754" visible="true" weight="0.24945612" />
+      <window_info id="Structure" order="1" sideWeight="0.50611246" side_tool="true" visible="true" weight="0.24945612" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.22093023" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.22093023" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32994187" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.40552327" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.40552327" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="10" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -287,13 +286,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/chicago_map.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="22" lean-forward="true" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
+        <state relative-caret-position="135">
+          <caret line="9" column="33" selection-start-line="9" selection-start-column="33" selection-end-line="9" selection-end-column="33" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <marker date="1536886281044" expanded="true" signature="1185:1186" ph="..." />
-            <marker date="1536886281044" expanded="true" signature="3903:4734" ph="..." />
-            <marker date="1536886281044" expanded="true" signature="5226:6101" ph="..." />
+            <marker date="1536887481198" expanded="true" signature="939:940" ph="..." />
+            <marker date="1536887481198" expanded="true" signature="3657:4488" ph="..." />
           </folding>
         </state>
       </provider>

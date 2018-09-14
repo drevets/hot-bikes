@@ -17,18 +17,11 @@ station_data = response.json()
 station_list = station_data['stationBeanList']
 station_data_frame = pd.DataFrame.from_records(station_list, index='id')
 
-
-#print(station_data_frame.loc[station_data_frame.id.eq(2), ['id', 'latitude', 'longitude']])
-#print(station_data_frame.loc[4, ['latitude', 'longitude']])
-
-#I wonder if I could do something with mapping....
-
 bike_data['start_station_longitude'] = np.nan
 bike_data['start_station_latitude'] = np.nan
 bike_data['end_station_longitude'] = np.nan
 bike_data['end_station_latitude'] = np.nan
 
-#now I want to iterate over bike data
 #need a way to weed out the bike trips that are not from current stations...
 
 def add_location_to_bike_trips(bike_data, station_data_frame):
@@ -118,37 +111,4 @@ def put_stations_on_map(station_list):
 
 
 marker_map = put_stations_on_map(station_list)
-
-def get_trip_counts_by_station(station_id):
-    locations = bike_data.groupby('from_station_id').first() #not sure what this code is really doing
-    locations = locations.loc[:, ["Start Station Latitude",
-                                 "Start Station Longitude",
-                                 "Start Station Name"]] # and here is where I'm going to need to figure out how
-                                                        #to join the data that I have with this data
-
-    departure_counts = locations.groupby('from_station_id').count()
-    departure_counts = departure_counts.iloc[:,[0]] #again, no idea what this is doing right now
-    departure_counts.columns = ['Departure Count']
-
-    arrival_counts = locations.groupby('to_station_id').count.iloc[:, [0]]
-    arrival_counts.columns = ['Arrival Count']
-
-    trip_counts = departure_counts.join(locations).join(arrival_counts)
-    return trip_counts
-
-
-
-#how do I display the map without a web browser? where do I host this in general?
-
-# #so I think this will return a map with stations on it....
-#
-# #so now I want to take that map and count the number of trips from each station. This will be harder.
-# #or, I think what I really want to do is add the station latitude and longitude to the map, and then
-# #add station latitude and longitude to the map that I have, based on station id, so that I can then group by total number of
-# #depatures.
-#
-# def get_trip_counts_by_station(station_id):
-#     departure_counts = subset.groupby('from_station_id').count()
-#     departure_counts.columns = ['Departure Count']
-
 
