@@ -3,37 +3,46 @@ import folium
 import requests
 import numpy as np
 
-# shadowing bad?
-def get_and_format_bike_data(csv_string):
-    bike_data = pd.read_csv(csv_string)
+#to do:
+#add .gitignore
+#separate folders into source and resources
+#fig the merging problem
+#separate out script and functions
+#have separate list function
+#try and catch error handling
+#get more data and munge them into a file (I don't know if that is the right word)
 
-    #this time below might not be necessary if not working  with time
+def get_and_format_trip_data(file_name):
+    '''
+    input: file name
+    output: data frame
+    '''
+    bike_trips = pd.read_csv(file_name)
 
-    bike_data["start_time"] = pd.to_datetime(bike_data["start_time"])
-    bike_data["end_time"] = pd.to_datetime(bike_data["end_time"])
-    bike_data["hour"] = bike_data["start_time"].map(lambda x: x.hour) #what is this lambda expression doing?
-    bike_data['start_station_longitude'] = np.nan
-    bike_data['start_station_latitude'] = np.nan
-    bike_data['end_station_longitude'] = np.nan
-    bike_data['end_station_latitude'] = np.nan
-    return bike_data
+    bike_trips["start_time"] = pd.to_datetime(bike_data["start_time"])
+    bike_trips["end_time"] = pd.to_datetime(bike_data["end_time"])
+    bike_trips["hour"] = bike_data["start_time"].map(lambda x: x.hour)
+    bike_trips['start_station_longitude'] = np.nan
+    bike_trips['start_station_latitude'] = np.nan
+    bike_trips['end_station_longitude'] = np.nan
+    bike_trips['end_station_latitude'] = np.nan
+    return bike_trips
 
-#async programming in Python?
-
-bike_data = get_and_format_bike_data("Divvy_Trips_2018_06.csv")
+trips = get_and_format_trip_data("Divvy_Trips_2018_06.csv")
 
 def get_station_list():
-    response = requests.get('https://feeds.divvybikes.com/stations/stations.json')
-
-    station_data = response.json()
-    station_list = station_data['stationBeanList']
-    station_data_frame = pd.DataFrame.from_records(station_list, index='id')
+    station_api_key = 'stationBeanList'
+    try:
+        response = requests.get('https://feeds.divvybikes.com/stations/stations.json')
+        station_data = response.json()
+        station_list = station_data[station_api_key]
+        station_data_frame = pd.DataFrame.from_records(station_list, index='id')
+    except:
+        print('something went wrong')
     return station_data_frame
 
 
-station_data_frame = get_station_list()
-# need a way to weed out the bike trips that are not from current stations...
-
+stations = get_station_list()
 
 def add_location_to_bike_trips(bike_data, station_data_frame):
     for index, row in bike_data.iterrows():
@@ -53,10 +62,14 @@ def add_location_to_bike_trips(bike_data, station_data_frame):
 
 def add_counts_to_stations(station_data_frame, bike_data):
     departure_counts = bike_data.groupby('from_station_id').count()
+    print(departure_counts.columns)
+    print(departure_counts.head(3))
     departure_counts = departure_counts.iloc[:, [0]] # so this does something magical....
+    print(departure_counts.head(3))
     departure_counts.columns = ['Departure Count']
 
     arrival_counts = bike_data.groupby('to_station_id').count()
+    # replace with .loc // include colo and replace 0 with 'trip_id'
     arrival_counts = arrival_counts.iloc[:, [0]]
     arrival_counts.columns = ['Arrival Count']
 
@@ -71,7 +84,7 @@ def add_counts_to_stations(station_data_frame, bike_data):
             print('key error')
     return station_data_frame
 
-station_data_frame = add_counts_to_stations(station_data_frame, bike_data)
+stations = add_counts_to_stations(stations, trips)
 
 
 def put_stations_and_counts_on_map(station_list):
@@ -88,7 +101,7 @@ def put_stations_and_counts_on_map(station_list):
     folium_map.save("count_map.html")
     return folium_map
 
-map = put_stations_and_counts_on_map(station_data_frame)
+map = put_stations_and_counts_on_map(stations)
 
 
 def put_stations_on_map(station_list):
