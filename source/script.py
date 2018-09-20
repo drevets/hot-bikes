@@ -8,9 +8,11 @@ trips = add_lat_and_lon_to_trips(get_and_format_trip_data("resources/Divvy_Trips
 stations = add_trip_counts_to_stations(stations, trips)
 station_map = put_stations_on_map(stations)
 
-# timeseries_heatmap_data = create_timeseries_data(trips)
-# make_timeseries_map(timeseries_heatmap_data)
+#makes timeseries heatmap
+timeseries_heatmap_data = create_timeseries_data(trips)
+make_timeseries_map(timeseries_heatmap_data)
 
+#code below here makes map with path lines on it
 min_lat = trips["Start_Latitude"].min()
 max_lat = trips["Start_Latitude"].max()
 max_lon = trips["Start_Longitude"].max()
