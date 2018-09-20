@@ -1,7 +1,6 @@
 import pandas as pd
 import folium
 import requests
-import numpy as np
 
 
 def get_and_format_trip_data(file_name):
@@ -34,9 +33,7 @@ def add_trip_counts_to_stations(stations, trips):
     output: data frame
     '''
     departure_counts = trips.groupby('from_station_id').count()
-    #look into changing this to .loc[:, 'trip_id'] and/or figure out why that doesn't work
-    #and figure out what this code is doing
-    departure_counts = departure_counts.iloc[:, [0]] # so this does something magical....
+    departure_counts = departure_counts.iloc[:, [0]]
     departure_counts.columns = ['Departure Count']
 
     arrival_counts = trips.groupby('to_station_id').count()
@@ -50,17 +47,13 @@ def add_trip_counts_to_stations(stations, trips):
                                                right_index=True)
     return stations
 
-trips = get_and_format_trip_data("resources/Divvy_Trips_2018_06.csv")
-stations = get_station_list()
-stations = add_trip_counts_to_stations(stations, trips)
-
 
 def add_lat_and_lon_to_trips(trips, stations):
     '''
     input: dataframes
     output: dataframe
     '''
-    # there is definitely a better way to do this...
+
     lat_lon_start = stations[['latitude', 'longitude']]
     lat_lon_start.columns = ['Start_Latitude', 'Start_Longitude']
     lat_lon_end = stations[['latitude', 'longitude']]
@@ -72,7 +65,6 @@ def add_lat_and_lon_to_trips(trips, stations):
                                             right_on='id')
     return trips
 
-add_lat_and_lon_to_trips(trips, stations)
 
 def put_stations_on_map(stations):
     '''
@@ -95,5 +87,3 @@ def put_stations_on_map(stations):
     map.save("count_map.html")
     return map
 
-#would be cool to do something where you could play a video of the heat map of the day
-#and also follow a specific bicycle

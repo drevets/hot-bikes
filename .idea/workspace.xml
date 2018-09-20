@@ -2,11 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ae8ba817-b294-4475-a78f-e476614feeaf" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/source/functions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/draw_paths.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/make_heatmap.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Divvy_Trips_2018_06.csv" beforeDir="false" afterPath="$PROJECT_DIR$/resources/Divvy_Trips_2018_06.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chicago_map.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/script.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/count_map.html" beforeDir="false" afterPath="$PROJECT_DIR$/count_map.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/make_station_map.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/source/script.py" beforeDir="false" afterPath="$PROJECT_DIR$/source/script.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,40 +19,42 @@
     <session id="-1146117392">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="2" />
+          <entry key="project.closed" value="4" />
+          <entry key="project.open.time.12" value="1" />
           <entry key="project.open.time.4" value="1" />
           <entry key="project.open.time.41" value="1" />
+          <entry key="project.open.time.6" value="1" />
           <entry key="project.open.time.8" value="1" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="4" />
+          <entry key="project.opened" value="6" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="csv" value="1" />
           <entry key="gitignore" value="1" />
-          <entry key="html" value="3" />
-          <entry key="py" value="2" />
+          <entry key="html" value="6" />
+          <entry key="py" value="6" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="HTML" value="3" />
+          <entry key="HTML" value="6" />
           <entry key="PLAIN_TEXT" value="2" />
-          <entry key="Python" value="2" />
+          <entry key="Python" value="6" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="dummy" value="6" />
+          <entry key="dummy" value="23" />
           <entry key="gitignore" value="23" />
-          <entry key="py" value="11008" />
+          <entry key="py" value="18011" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="29" />
-          <entry key="Python" value="11008" />
+          <entry key="PLAIN_TEXT" value="46" />
+          <entry key="Python" value="18011" />
         </counts>
       </usages-collector>
     </session>
@@ -61,27 +64,60 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/source/script.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+            <state relative-caret-position="246">
+              <caret line="68" column="32" lean-forward="true" selection-start-line="68" selection-start-column="32" selection-end-line="68" selection-end-column="32" />
               <folding>
-                <marker date="1536965303568" expanded="true" signature="333:335" ph="..." />
+                <element signature="e#0#30#0" expanded="true" />
+                <marker date="1537478256175" expanded="true" signature="444:607" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/source/draw_paths.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1515">
+              <caret line="101" column="19" lean-forward="true" selection-start-line="101" selection-start-column="19" selection-end-line="101" selection-end-column="19" />
+              <folding>
+                <element signature="e#0#32#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/source/make_station_map.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-339">
+              <caret line="50" column="28" selection-start-line="50" selection-start-column="4" selection-end-line="50" selection-end-column="28" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+                <marker date="1537479396511" expanded="true" signature="1652:2245" ph="..." />
+                <marker date="1537479396511" expanded="true" signature="3166:3168" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/source/functions.py">
+        <entry file="file://$PROJECT_DIR$/source/make_heatmap.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
-              <caret line="90" column="36" selection-start-line="90" selection-start-column="36" selection-end-line="90" selection-end-column="36" />
+            <state relative-caret-position="254">
+              <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
               <folding>
-                <element signature="e#0#19#0" expanded="true" />
-                <marker date="1536965762971" expanded="true" signature="2000:2687" ph="..." />
-                <marker date="1536965762971" expanded="true" signature="3608:3610" ph="..." />
+                <element signature="e#0#13#0" expanded="true" />
+                <marker date="1537474722356" expanded="true" signature="711:716" ph="..." />
+                <marker date="1537474722356" expanded="true" signature="711:1342" ph="..." />
+                <marker date="1537474722356" expanded="true" signature="1644:1645" ph="..." />
               </folding>
             </state>
           </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/heatmap.html">
+          <provider selected="true" editor-type-id="LargeFileEditor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -111,6 +147,22 @@
       </list>
     </option>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>print</find>
+      <find>to_image</find>
+      <find>print(</find>
+      <find>save</find>
+      <find>max_lon</find>
+      <find>pixel</find>
+      <find>row_to</find>
+      <find>mpl</find>
+      <find>row</find>
+      <find>row_to_pixel</find>
+      <find>get_image_data</find>
+      <find>np</find>
+    </findStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -120,8 +172,12 @@
         <option value="$PROJECT_DIR$/chicago_map.py" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/source/chicago_map.py" />
-        <option value="$PROJECT_DIR$/source/script.py" />
         <option value="$PROJECT_DIR$/source/functions.py" />
+        <option value="$PROJECT_DIR$/source/scraps.py" />
+        <option value="$PROJECT_DIR$/source/make_heatmap.py" />
+        <option value="$PROJECT_DIR$/source/script.py" />
+        <option value="$PROJECT_DIR$/source/draw_paths.py" />
+        <option value="$PROJECT_DIR$/source/make_station_map.py" />
       </list>
     </option>
   </component>
@@ -154,6 +210,12 @@
               <item name="hot-bikes" type="47feb1d3:ProjectViewModuleNode" />
               <item name="hot-bikes" type="462c0819:PsiDirectoryNode" />
               <item name="resources" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="hot-bikes" type="b2602c69:ProjectViewProjectNode" />
+              <item name="hot-bikes" type="47feb1d3:ProjectViewModuleNode" />
+              <item name="hot-bikes" type="462c0819:PsiDirectoryNode" />
+              <item name="source" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -261,37 +323,18 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.4026163" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.3997093" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32994187" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.23982558" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Python Console" order="10" />
+      <window_info anchor="bottom" id="Python Console" order="10" weight="0.32994187" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
-    <layout-to-restore>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49330783" visible="true" weight="0.24945612" />
-      <window_info id="Structure" order="1" sideWeight="0.5066922" side_tool="true" visible="true" weight="0.24945612" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.23837209" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="7" weight="0.32994187" />
-      <window_info anchor="bottom" id="Terminal" order="8" visible="true" weight="0.23982558" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Python Console" order="10" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-    </layout-to-restore>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -351,24 +394,72 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/source/script.py">
+    <entry file="file://$PROJECT_DIR$/heatmap.html">
+      <provider selected="true" editor-type-id="LargeFileEditor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/scraps.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
-          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+          <caret line="9" column="24" selection-start-line="9" selection-start-column="24" selection-end-line="9" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/heatmap_with_time.html">
+      <provider selected="true" editor-type-id="LargeFileEditor">
+        <state relative-caret-position="142">
+          <caret line="13" column="8" lean-forward="true" selection-start-line="13" selection-start-column="8" selection-end-line="13" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/script.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="246">
+          <caret line="68" column="32" lean-forward="true" selection-start-line="68" selection-start-column="32" selection-end-line="68" selection-end-column="32" />
           <folding>
-            <marker date="1536965303568" expanded="true" signature="333:335" ph="..." />
+            <element signature="e#0#30#0" expanded="true" />
+            <marker date="1537478256175" expanded="true" signature="444:607" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/source/functions.py">
+    <entry file="file://$PROJECT_DIR$/path_map.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="90" column="36" selection-start-line="90" selection-start-column="36" selection-end-line="90" selection-end-column="36" />
+        <state relative-caret-position="21">
+          <caret line="4" column="26" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/draw_paths.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1515">
+          <caret line="101" column="19" lean-forward="true" selection-start-line="101" selection-start-column="19" selection-end-line="101" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/make_station_map.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-339">
+          <caret line="50" column="28" selection-start-line="50" selection-start-column="4" selection-end-line="50" selection-end-column="28" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <marker date="1536965762971" expanded="true" signature="2000:2687" ph="..." />
-            <marker date="1536965762971" expanded="true" signature="3608:3610" ph="..." />
+            <marker date="1537479396511" expanded="true" signature="1652:2245" ph="..." />
+            <marker date="1537479396511" expanded="true" signature="3166:3168" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/make_heatmap.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="254">
+          <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+            <marker date="1537474722356" expanded="true" signature="711:716" ph="..." />
+            <marker date="1537474722356" expanded="true" signature="711:1342" ph="..." />
+            <marker date="1537474722356" expanded="true" signature="1644:1645" ph="..." />
           </folding>
         </state>
       </provider>
