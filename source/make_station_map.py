@@ -27,6 +27,8 @@ def get_station_list():
         print('something went wrong')
     return stations
 
+print('hello')
+
 def add_trip_counts_to_stations(stations, trips):
     '''
     input: data frames
