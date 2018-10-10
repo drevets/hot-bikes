@@ -86,83 +86,87 @@ def find_max_and_min_lat_and_lon():
     #questions: where is there duplicate work, work that doesn't quite make sense
     #figure out how to add Max's code back into it...and then write unit tests
 
+    #also, trips vs paths terminology getting confusing here
 
-def make_trip_map():
+def find_paths():
     trips = get_trips()
-    print(trips.head(5))
-
-    #so we're condensing the data down a little bit here to just have the from station ids and their lats and longs
-    locations = trips.groupby("from_station_id").mean()
-    print(locations.head(5))
-
-    #so I don't think I need to do this...I think I can just use the station data and then drop columns
-    locations = locations.loc[:, ["Start_Latitude", "Start_Longitude"]]
-    print(locations.head(5))
-
-    #and then here, we're creating a new column in trips with a tuple of from and to station ids
     trips["path_id"] = [(id1, id2) for id1, id2 in zip(trips["from_station_id"],
                                                        trips["to_station_id"])]
+    return trips
 
-    print(trips['path_id'][5])
-    print(trips.head(5))
+def filter_paths_by_hour(trips, hour):
+    trips = trips[trips["hour"] == hour]
+    return trips
 
-    #selecting the hour, counting number of duplicate trips, and then filtering it down to one column
-    paths2 = trips[trips["hour"] == 9].groupby("path_id").count().iloc[:, [1]]
-    print(paths2.head(5))
+def count_paths(trips):
+    paths = trips.groupby("path_id").count()
+    paths = paths.iloc[:, [1]]
+    paths.columns = ['Trip Count']
+    return paths
 
-    #renaming the one column
-    paths.columns = ["Trip Count"]
+def filter_paths(paths, min_count):
+    paths = paths[paths["Trip Count"] > min_count]
+    return paths
 
-    # select only paths with more than X trips
-    paths = paths[paths["Trip Count"] > 5]
+def make_trip_map():
+    locations = get_station_list()
+    locations = locations.loc[:, ['latitude', 'longitude']]
+    locations.columns = ['Start_Latitude', 'Start_Longitude']
 
-    #separate out the tuple that is now the index into their own discrete columns
-    paths["from_station_id"] = paths.index.map(lambda x: x[0])
-    paths["to_station_id"] = paths.index.map(lambda x: x[1])
 
-    #remove any paths that have the same start and stop stations
-    paths = paths[paths["from_station_id"] != paths["to_station_id"]]
-    # # join latitude/longitude into new table for the from station id
-    paths = paths.join(locations, on="from_station_id")
-
-    #renaming the columns and then doing another join
-    locations.columns = ["End Station Latitude", "End Station Longitude"]
-    paths = paths.join(locations, on="to_station_id")
-
-    print(paths.head(4))
-
-    #re-indexing
-    paths.index = range(len(paths))
-
-    print(paths.head(4))
-
-    min_lat, max_lat, max_lon, min_lon = find_max_and_min_lat_and_lon()
-
-    image_data = get_image_data(max_lat, max_lon, min_lon, paths)
-
-    folium_map = folium.Map(location=[41.88, -87.62],
-                            zoom_start=13,
-                            tiles="CartoDB dark_matter",
-                            width='50%')
-
-    # create the overlay
-    map_overlay = add_alpha(to_image(image_data * 10))
-
-    # compute extent of image in lat/lon
-    aspect_ratio = map_overlay.shape[1] / map_overlay.shape[0]
-    delta_lat = (max_lon - min_lon) / aspect_ratio * np.cos(min_lat / 360 * 2 * np.pi)
-
-    # add the image to the map
-    img = folium.raster_layers.ImageOverlay(map_overlay,
-                                            bounds=[(max_lat - delta_lat, min_lon), (max_lat, max_lon)],
-                                            opacity=1,
-                                            name="Paths")
-
-    img.add_to(folium_map)
-    folium.LayerControl().add_to(folium_map)
-
-    # show the map
-    folium_map.save('path_map.html')
+    #
+    # #selecting the hour, counting number of duplicate trips, and then filtering it down to one column
+    #
+    #
+    # #renaming the one column
+    # paths.columns = ["Trip Count"]
+    #
+    # # select only paths with more than X trips
+    # paths = paths[paths["Trip Count"] > 5]
+    #
+    # #separate out the tuple that is now the index into their own discrete columns
+    # paths["from_station_id"] = paths.index.map(lambda x: x[0])
+    # paths["to_station_id"] = paths.index.map(lambda x: x[1])
+    #
+    # #remove any paths that have the same start and stop stations
+    # paths = paths[paths["from_station_id"] != paths["to_station_id"]]
+    # # # join latitude/longitude into new table for the from station id
+    # paths = paths.join(locations, on="from_station_id")
+    #
+    # #renaming the columns and then doing another join
+    # locations.columns = ["End Station Latitude", "End Station Longitude"]
+    # paths = paths.join(locations, on="to_station_id")
+    #
+    # #re-indexing
+    # paths.index = range(len(paths))
+    #
+    # min_lat, max_lat, max_lon, min_lon = find_max_and_min_lat_and_lon()
+    #
+    # image_data = get_image_data(max_lat, max_lon, min_lon, paths)
+    #
+    # folium_map = folium.Map(location=[41.88, -87.62],
+    #                         zoom_start=13,
+    #                         tiles="CartoDB dark_matter",
+    #                         width='50%')
+    #
+    # # create the overlay
+    # map_overlay = add_alpha(to_image(image_data * 10))
+    #
+    # # compute extent of image in lat/lon
+    # aspect_ratio = map_overlay.shape[1] / map_overlay.shape[0]
+    # delta_lat = (max_lon - min_lon) / aspect_ratio * np.cos(min_lat / 360 * 2 * np.pi)
+    #
+    # # add the image to the map
+    # img = folium.raster_layers.ImageOverlay(map_overlay,
+    #                                         bounds=[(max_lat - delta_lat, min_lon), (max_lat, max_lon)],
+    #                                         opacity=1,
+    #                                         name="Paths")
+    #
+    # img.add_to(folium_map)
+    # folium.LayerControl().add_to(folium_map)
+    #
+    # # show the map
+    # folium_map.save('path_map.html')
 
 
 def generate_all_html_pages():
