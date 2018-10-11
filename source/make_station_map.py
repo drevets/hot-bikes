@@ -8,10 +8,8 @@ def get_and_format_trip_data(file_name):
     input: file name
     output: pandas data frame
     '''
-    bike_trips = pd.read_csv(file_name)
-
-    bike_trips["start_time"] = pd.to_datetime(bike_trips["start_time"])
-    bike_trips["end_time"] = pd.to_datetime(bike_trips["end_time"])
+    parse_dates = ['start_time', 'end_time']
+    bike_trips = pd.read_csv(file_name, parse_dates=parse_dates)
     bike_trips["hour"] = bike_trips["start_time"].map(lambda x: x.hour)
     return bike_trips
 

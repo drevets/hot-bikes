@@ -52,190 +52,117 @@ def check_data_frame(data_frame, spec):
             raise Exception("Unexpected data frame column: {0}".format(data_frame_column))
 
 
-
 def generate_heatmap():
     stations = get_station_list()
     trips = add_lat_and_lon_to_trips(get_and_format_trip_data("resources/Divvy_Trips_2018_06.csv"), stations)
     timeseries_heatmap_data = create_timeseries_data(trips)
     make_timeseries_map(timeseries_heatmap_data)
 
+def create_html_map_with_path_data():
+    trips = get_format_path_data()
+    folium_map = create_folium_image_with_paths(trips)
+    generate_html(folium_map)
+
+def create_folium_image_with_paths(trips):
+    min_lat, max_lat, max_lon, min_lon = find_max_and_min_lat_and_lon(trips)
+    image_data = create_map_image_data(trips)
+    map_overlay = make_map_image_overlay(image_data)
+    delta_lat = get_aspect_ratio_and_return_delta_lat(map_overlay, max_lon, min_lon, min_lat)
+    folium_map = make_folium_map(map_overlay, max_lat, delta_lat, min_lon, max_lon)
+    return folium_map
+
+def get_format_path_data():
+    trips = get_trips()
+    trips = identify_discrete_trips(trips)
+    trips = filter_trips_by_hour(trips, 12)
+    trips = count_trips(trips)
+    trips = filter_trips_by_count(trips, 5)
+    stations = get_and_format_station_data()
+    trips = format_path_data(trips)
+    trips = add_lat_and_lon_to_path_data_frame(trips, stations)
+    return trips
+
+
 def get_trips():
     stations = get_station_list()
     trips = add_lat_and_lon_to_trips(get_and_format_trip_data("resources/Divvy_Trips_2018_06.csv"), stations)
     return trips
 
-def find_max_and_min_lat_and_lon():
-    trips = get_trips()
+def find_max_and_min_lat_and_lon(trips):
     min_lat = trips["Start_Latitude"].min()
     max_lat = trips["Start_Latitude"].max()
     max_lon = trips["Start_Longitude"].max()
     min_lon = trips["Start_Longitude"].min()
     return {min_lat, max_lat, max_lon, min_lon}
 
-#should also use the function that Max defined above
-
-#so what are the parts that happen here...
-    #get the locations and create just a list of stations with the lat and long
-    #create new column with a tuple representing starting and ending stations
-    #take a subset of the data by narrowing it down by hour
-    #group it and count it and then drop the other columns, remaining with just a count of the paths and the path
-    #rename that column to trip count
-    #narrow it down to only five or less trips (might be better if not hard-coded)
-    #then separate out those tuples again into their own columns (do we still need the station id??)
-    #do two joins, to get the latitude and longitude back
-    #questions: where is there duplicate work, work that doesn't quite make sense
-    #figure out how to add Max's code back into it...and then write unit tests
-
-    #also, trips vs paths terminology getting confusing here
-
-def find_paths():
-    trips = get_trips()
+def identify_discrete_trips(trips):
     trips["path_id"] = [(id1, id2) for id1, id2 in zip(trips["from_station_id"],
                                                        trips["to_station_id"])]
     return trips
 
-def filter_paths_by_hour(trips, hour):
+def filter_trips_by_hour(trips, hour):
     trips = trips[trips["hour"] == hour]
     return trips
 
-def count_paths(trips):
+def count_trips(trips):
     paths = trips.groupby("path_id").count()
     paths = paths.iloc[:, [1]]
     paths.columns = ['Trip Count']
     return paths
 
-def filter_paths(paths, min_count):
+def filter_trips_by_count(paths, min_count):
     paths = paths[paths["Trip Count"] > min_count]
     return paths
 
-def make_trip_map():
+def get_and_format_station_data():
     locations = get_station_list()
     locations = locations.loc[:, ['latitude', 'longitude']]
     locations.columns = ['Start_Latitude', 'Start_Longitude']
+    return locations
 
+def format_path_data(paths):
+    paths["from_station_id"] = paths.index.map(lambda x: x[0])
+    paths["to_station_id"] = paths.index.map(lambda x: x[1])
+    paths = paths[paths["from_station_id"] != paths["to_station_id"]]
+    return paths
 
-    #
-    # #selecting the hour, counting number of duplicate trips, and then filtering it down to one column
-    #
-    #
-    # #renaming the one column
-    # paths.columns = ["Trip Count"]
-    #
-    # # select only paths with more than X trips
-    # paths = paths[paths["Trip Count"] > 5]
-    #
-    # #separate out the tuple that is now the index into their own discrete columns
-    # paths["from_station_id"] = paths.index.map(lambda x: x[0])
-    # paths["to_station_id"] = paths.index.map(lambda x: x[1])
-    #
-    # #remove any paths that have the same start and stop stations
-    # paths = paths[paths["from_station_id"] != paths["to_station_id"]]
-    # # # join latitude/longitude into new table for the from station id
-    # paths = paths.join(locations, on="from_station_id")
-    #
-    # #renaming the columns and then doing another join
-    # locations.columns = ["End Station Latitude", "End Station Longitude"]
-    # paths = paths.join(locations, on="to_station_id")
-    #
-    # #re-indexing
-    # paths.index = range(len(paths))
-    #
-    # min_lat, max_lat, max_lon, min_lon = find_max_and_min_lat_and_lon()
-    #
-    # image_data = get_image_data(max_lat, max_lon, min_lon, paths)
-    #
-    # folium_map = folium.Map(location=[41.88, -87.62],
-    #                         zoom_start=13,
-    #                         tiles="CartoDB dark_matter",
-    #                         width='50%')
-    #
-    # # create the overlay
-    # map_overlay = add_alpha(to_image(image_data * 10))
-    #
-    # # compute extent of image in lat/lon
-    # aspect_ratio = map_overlay.shape[1] / map_overlay.shape[0]
-    # delta_lat = (max_lon - min_lon) / aspect_ratio * np.cos(min_lat / 360 * 2 * np.pi)
-    #
-    # # add the image to the map
-    # img = folium.raster_layers.ImageOverlay(map_overlay,
-    #                                         bounds=[(max_lat - delta_lat, min_lon), (max_lat, max_lon)],
-    #                                         opacity=1,
-    #                                         name="Paths")
-    #
-    # img.add_to(folium_map)
-    # folium.LayerControl().add_to(folium_map)
-    #
-    # # show the map
-    # folium_map.save('path_map.html')
-
-
-def generate_all_html_pages():
-    stations = get_station_list()
-    trips = add_lat_and_lon_to_trips(get_and_format_trip_data("resources/Divvy_Trips_2018_06.csv"), stations)
-    stations = add_trip_counts_to_stations(stations, trips)
-    station_map = put_stations_on_map(stations) #I'm pretty sure this isn't doing anything right here, not anything important at least
-
-    #makes timeseries heatmap
-    timeseries_heatmap_data = create_timeseries_data(trips)
-    make_timeseries_map(timeseries_heatmap_data)
-
-    #code below here makes map with path lines on it
-    min_lat = trips["Start_Latitude"].min()
-    max_lat = trips["Start_Latitude"].max()
-    max_lon = trips["Start_Longitude"].max()
-    min_lon = trips["Start_Longitude"].min()
-
-    # make a list of locations (latitude longitude) for each station id
-    locations = trips.groupby("from_station_id").mean()
-
-    locations = locations.loc[:,["Start_Latitude", "Start_Longitude"]]
-
-    trips["path_id"] = [(id1,id2) for id1,id2 in zip(trips["from_station_id"],
-                                                         trips["to_station_id"])]
-
-    paths = trips[trips["hour"]==9].groupby("path_id").count().iloc[:,[1]]
-
-    paths.columns = ["Trip Count"]
-
-    # select only paths with more than X trips
-    paths = paths[paths["Trip Count"]>5]
-    paths["from_station_id"] = paths.index.map(lambda x:x[0])
-    paths["to_station_id"] = paths.index.map(lambda x:x[1])
-
-    paths = paths[paths["from_station_id"]!=paths["to_station_id"]]
-    # # join latitude/longitude into new table
-    paths = paths.join(locations,on="from_station_id")
-
-    locations.columns = ["End Station Latitude","End Station Longitude"]
-    paths = paths.join(locations,on="to_station_id")
-
+def add_lat_and_lon_to_path_data_frame(paths, locations):
+    paths = paths.join(locations, on="from_station_id")
+    locations.columns = ["End Station Latitude", "End Station Longitude"]
+    paths = paths.join(locations, on="to_station_id")
     paths.index = range(len(paths))
+    return paths
 
-    image_data = get_image_data(max_lat, max_lon, min_lon, paths)
+def create_map_image_data(trips):
+    min_lat, max_lat, max_lon, min_lon = find_max_and_min_lat_and_lon(trips)
+    image_data = get_image_data(max_lat, max_lon, min_lon, trips)
+    return image_data
 
+def make_map_image_overlay(image_data):
+    map_overlay = add_alpha(to_image(image_data * 10))
+    return map_overlay
+
+def get_aspect_ratio_and_return_delta_lat(map_overlay, max_lon, min_lon, min_lat):
+    aspect_ratio = map_overlay.shape[1] / map_overlay.shape[0]
+    delta_lat = (max_lon - min_lon) / aspect_ratio * np.cos(min_lat / 360 * 2 * np.pi)
+    return delta_lat
+
+def make_folium_map(map_overlay, max_lat, delta_lat, min_lon, max_lon):
     folium_map = folium.Map(location=[41.88, -87.62],
-                            zoom_start=13,
-                            tiles="CartoDB dark_matter",
-                            width='50%')
-
-    # create the overlay
-    map_overlay = add_alpha(to_image(image_data*10))
-
-    # compute extent of image in lat/lon
-    aspect_ratio = map_overlay.shape[1]/map_overlay.shape[0]
-    delta_lat = (max_lon-min_lon)/aspect_ratio*np.cos(min_lat/360*2*np.pi)
-
-    # add the image to the map
+                             zoom_start=13,
+                             tiles="CartoDB dark_matter",
+                             width='50%')
     img = folium.raster_layers.ImageOverlay(map_overlay,
-                               bounds = [(max_lat-delta_lat,min_lon),(max_lat,max_lon)],
-                               opacity = 1,
-                               name = "Paths")
+                                            bounds=[(max_lat - delta_lat, min_lon), (max_lat, max_lon)],
+                                             opacity=1,
+                                             name="Paths")
 
     img.add_to(folium_map)
     folium.LayerControl().add_to(folium_map)
+    return folium_map
 
-    # show the map
-    folium_map.save('path_map.html')
+def generate_html(folium_map):
+    folium_map.save('path_map2.html')
 
 if __name__ == '__main__':
-    make_trip_map()
+    create_html_map_with_path_data()
