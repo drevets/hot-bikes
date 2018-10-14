@@ -25,26 +25,6 @@ def get_station_list():
         print('something went wrong')
     return stations
 
-def add_trip_counts_to_stations(stations, trips):
-    '''
-    input: data frames
-    output: data frame
-    '''
-    departure_counts = trips.groupby('from_station_id').count()
-    departure_counts = departure_counts.iloc[:, [0]]
-    departure_counts.columns = ['Departure Count']
-
-    arrival_counts = trips.groupby('to_station_id').count()
-    arrival_counts = arrival_counts.iloc[:, [0]]
-    arrival_counts.columns = ['Arrival Count']
-
-    stations = pd.merge(departure_counts, stations,
-                        right_on='id',
-                        left_index=True).merge(arrival_counts,
-                                               left_on='id',
-                                               right_index=True)
-    return stations
-
 
 def add_lat_and_lon_to_trips(trips, stations):
     '''
