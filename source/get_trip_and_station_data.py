@@ -25,21 +25,4 @@ def get_station_list():
     return stations
 
 
-def add_lat_and_lon_to_trips(trips, stations):
-    '''
-    input: dataframes
-    output: dataframe
-    '''
-
-    lat_lon_start = stations[['latitude', 'longitude']]
-    lat_lon_start.columns = ['Start_Latitude', 'Start_Longitude']
-    lat_lon_end = stations[['latitude', 'longitude']]
-    lat_lon_end.columns = ['End_Latitude', 'End_Longitude']
-    trips = trips.merge(lat_lon_start,
-                        left_on='from_station_id',
-                        right_on='id').merge(lat_lon_end,
-                                            left_on='to_station_id',
-                                            right_on='id')
-    return trips
-
 

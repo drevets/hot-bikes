@@ -1,5 +1,5 @@
 import folium
-from folium import plugins
+from source.get_trip_and_station_data import get_and_format_trip_data, get_station_list, add_lat_and_lon_to_trips
 
 def create_heatmap_list(trips_df):
     '''
@@ -21,7 +21,6 @@ def create_heatmap_list(trips_df):
     return heat_data
 
 def create_timeseries_data(trips_df):
-    # function needs to create a list of lists [[[], []], [[], []]]
     heat_df = trips_df.dropna(axis=0, subset=['Start_Latitude', 'Start_Longitude', 'End_Latitude', 'End_Longitude', 'hour'])
 
     heat_data1 = []
@@ -37,16 +36,22 @@ def create_timeseries_data(trips_df):
     return heat_data1
 
 
-def make_heatmap(heatmap_list):
+def make_heatmap_html(heatmap_list):
     folium_map = folium.Map(location=[41.88, -87.62],
                     zoom_start = 13,)
-    plugins.HeatMap(heatmap_list, radius=7, min_opacity=0.25).add_to(folium_map)
+    folium.plugins.HeatMap(heatmap_list, radius=7, min_opacity=0.25).add_to(folium_map)
     folium_map.save('heatmap.html')
     return folium_map
 
-def make_timeseries_map(heatmap_data):
+def make_timeseries_map_html(heatmap_data):
     folium_map = folium.Map(location=[41.88, -87.62],
                             zoom_start=13, )
-    plugins.HeatMapWithTime(heatmap_data, auto_play=True, max_opacity=8, radius=7, min_opacity=0.25).add_to(folium_map)
+    folium.plugins.HeatMapWithTime(heatmap_data, auto_play=True, max_opacity=8, radius=7, min_opacity=0.25).add_to(folium_map)
     folium_map.save('heatmap_with_time.html')
     return folium_map
+
+def generate_timeseries_heatmap():
+    stations = get_station_list()
+    trips = add_lat_and_lon_to_trips(get_and_format_trip_data("resources/Divvy_Trips_2018_06.csv"), stations)
+    timeseries_heatmap_data = create_timeseries_data(trips)
+    make_timeseries_map_html(timeseries_heatmap_data)
