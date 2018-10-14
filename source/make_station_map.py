@@ -64,24 +64,3 @@ def add_lat_and_lon_to_trips(trips, stations):
     return trips
 
 
-def put_stations_on_map(stations):
-    '''
-    input: data frame
-    output: folium map
-    '''
-    map = folium.Map(location=[41.88, -87.62],
-                            zoom_start=13,
-                            tiles="CartoDB dark_matter")
-    for index, station in stations.iterrows():
-        popup_text = "{}<br> Total departures: {}<br> Total arrivals: {}<br>"
-        popup_text = popup_text.format(stations.at[index, "stationName"],
-                                       stations.at[index, "Arrival Count"],
-                                       stations.at[index, "Departure Count"],
-                                       )
-        folium.CircleMarker(location=[stations.at[index, 'latitude'],
-                                      stations.at[index, 'longitude']],
-                            fill=True,
-                            popup=popup_text).add_to(map)
-    map.save("count_map.html")
-    return map
-
