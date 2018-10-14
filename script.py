@@ -1,7 +1,7 @@
 import numpy as np
 
-from source.make_station_map import *
-from source.draw_paths import *
+from source.make_station_map import get_and_format_trip_data, get_station_list, add_lat_and_lon_to_trips
+from source.draw_paths import to_image, get_image_data, add_alpha
 from source.make_heatmap import *
 
 def add_path_station_locations(paths, locations):
