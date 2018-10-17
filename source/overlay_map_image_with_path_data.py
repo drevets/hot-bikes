@@ -1,5 +1,5 @@
 from source.transform_trip_data import get_trips, identify_discrete_trips, filter_trips_by_hour, \
-    get_and_format_station_data, format_path_data, add_lat_and_lon_to_path_data_frame, count_trips, filter_trips_by_count
+    get_and_format_station_data, format_and_clean_path_data, add_lat_and_lon_to_path_data_frame, count_trips, filter_trips_by_count
 
 from source.create_and_manipulate_map_image_data import find_max_and_min_lat_and_lon, create_map_image_data, make_map_image_overlay, \
     get_aspect_ratio_and_return_delta_lat, make_folium_map
@@ -17,8 +17,8 @@ def get_and_format_path_data():
     trips = count_trips(trips)
     trips = filter_trips_by_count(trips, 5)
     stations = get_and_format_station_data()
-    trips = format_path_data(trips)
-    trips =  add_lat_and_lon_to_path_data_frame(trips, stations)
+    trips = format_and_clean_path_data(trips)
+    trips = add_lat_and_lon_to_path_data_frame(trips, stations)
     return trips
 
 def create_folium_image_with_paths(trips):

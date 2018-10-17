@@ -1,7 +1,7 @@
 import unittest
 import pandas as pd
 
-from script import add_path_station_locations
+from source.transform_trip_data import add_path_station_locations, identify_discrete_trips
 
 class ScriptTests(unittest.TestCase):
 
@@ -51,6 +51,11 @@ class ScriptTests(unittest.TestCase):
         paths["Trip Count"][0] = 6
         # This second assert shows that mutating `paths` doesn't affect `actual_data_frame`
         self.assertTrue(actual_data_frame.equals(expected_data_frame))
+
+    def test__identify_discrete_trips__always__returns_correct(self):
+        #this function takes in a data frame
+        #then it adds a new column called 'path_id'
+        #
 
 
 

@@ -1,25 +1,5 @@
 from source.get_trip_and_station_data import get_and_format_trip_data, get_station_list
 
-def add_lat_and_lon_to_trips(trips, stations):
-    '''
-    input: dataframes
-    output: dataframe
-    '''
-
-    lat_lon_start = stations[['latitude', 'longitude']]
-    lat_lon_start.columns = ['Start_Latitude', 'Start_Longitude']
-    lat_lon_end = stations[['latitude', 'longitude']]
-    lat_lon_end.columns = ['End_Latitude', 'End_Longitude']
-    trips = trips.merge(lat_lon_start,
-                        left_on='from_station_id',
-                        right_on='id').merge(lat_lon_end,
-                                            left_on='to_station_id',
-                                            right_on='id')
-
-    print(trips.head(5))
-    print(trips.columns)
-    return trips
-
 def add_path_station_locations(paths, locations):
     """
     -`paths` is a DataFrame with three columns: "Trip Count", "from_station_id" and "to_station_id"
@@ -67,6 +47,24 @@ def check_data_frame(data_frame, spec):
         if data_frame_column not in spec:
             raise Exception("Unexpected data frame column: {0}".format(data_frame_column))
 
+def add_lat_and_lon_to_trips(trips, stations):
+    '''
+    input: dataframes
+    output: dataframe
+    '''
+
+    lat_lon_start = stations[['latitude', 'longitude']]
+    lat_lon_start.columns = ['Start_Latitude', 'Start_Longitude']
+    lat_lon_end = stations[['latitude', 'longitude']]
+    lat_lon_end.columns = ['End_Latitude', 'End_Longitude']
+    trips = trips.merge(lat_lon_start,
+                        left_on='from_station_id',
+                        right_on='id').merge(lat_lon_end,
+                                            left_on='to_station_id',
+                                            right_on='id')
+
+    return trips
+
 def get_trips():
     stations = get_station_list()
     trips = add_lat_and_lon_to_trips(get_and_format_trip_data("resources/Divvy_Trips_2018_06.csv"), stations)
@@ -97,17 +95,13 @@ def get_and_format_station_data():
     locations.columns = ['Start_Latitude', 'Start_Longitude']
     return locations
 
-def format_path_data(paths):
+def format_and_clean_path_data(paths):
     paths["from_station_id"] = paths.index.map(lambda x: x[0])
     paths["to_station_id"] = paths.index.map(lambda x: x[1])
     paths = paths[paths["from_station_id"] != paths["to_station_id"]]
     return paths
 
 def add_lat_and_lon_to_path_data_frame(paths, locations):
-    print('*************PATHS')
-    print(paths.head(5))
-    print('**************LOCATIONS')
-    print(locations.head(5))
     paths = paths.join(locations, on="from_station_id")
     locations.columns = ["End Station Latitude", "End Station Longitude"]
     paths = paths.join(locations, on="to_station_id")
