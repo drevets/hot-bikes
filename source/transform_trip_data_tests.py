@@ -53,9 +53,23 @@ class ScriptTests(unittest.TestCase):
         self.assertTrue(actual_data_frame.equals(expected_data_frame))
 
     def test__identify_discrete_trips__always__returns_correct(self):
-        #this function takes in a data frame
-        #then it adds a new column called 'path_id'
-        #
+        parse_dates = ['start_time', 'end_time']
+        trips =  pd.read_csv('../resources/test_data', parse_dates=parse_dates)
+
+        result = identify_discrete_trips(trips)
+
+        sample_path = result['path_id'][0]
+        sample_path_id_type = type(sample_path)
+
+        sample_trip = result.iloc[0]
+        sample_trip_path = sample_trip['path_id']
+        sample_trip_from = sample_trip['from_station_id']
+        sample_trip_to = sample_trip['to_station_id']
+
+        self.assertTrue(result.columns.contains('path_id'))
+        self.assertTrue(sample_path_id_type == (type((1, 2)))) #how to check if types are right?? has to be something better than this
+        self.assertTrue(sample_trip_from == sample_trip_path[0])
+        self.assertTrue(sample_trip_to == sample_trip_path[1])
 
 
 
