@@ -1,9 +1,9 @@
+from matplotlib.colors import LinearSegmentedColormap, hsv_to_rgb, rgb_to_hsv
+import scipy.ndimage.filters
 from PIL import Image, ImageDraw
 import numpy as np
 import matplotlib as mpl
 mpl.use('TkAgg')
-from matplotlib.colors import LinearSegmentedColormap, hsv_to_rgb, rgb_to_hsv
-import scipy.ndimage.filters
 
 def get_kernel(kernel_size, blur=1 / 20, halo=.001):
     """
@@ -24,7 +24,6 @@ def add_lines(image_array, xys, width=1, weights=None):
     width: width of lines
     weights: [], optional list of multipliers for lines.
     """
-
 
     for i, xy in enumerate(xys):
 

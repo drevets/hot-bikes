@@ -1,0 +1,22 @@
+trip_id,start_time,end_time,bikeid,tripduration,from_station_id,from_station_name,to_station_id,to_station_name,usertype,gender,birthyear
+19244617,2018-06-30 23:59:20,2018-07-01 00:06:33,5851,433,141,Clark St & Lincoln Ave,313,Lakeview Ave & Fullerton Pkwy,Customer,,
+19244616,2018-06-30 23:59:13,2018-07-01 00:06:18,4968,425,141,Clark St & Lincoln Ave,313,Lakeview Ave & Fullerton Pkwy,Customer,,
+19244615,2018-06-30 23:58:55,2018-07-01 00:21:25,2838,1350,623,Michigan Ave & 8th St,173,Mies van der Rohe Way & Chicago Ave,Subscriber,Female,1972
+19244614,2018-06-30 23:58:58,2018-07-01 01:04:10,3809,3912,35,Streeter Dr & Grand Ave,284,Michigan Ave & Jackson Blvd,Customer,,
+19244613,2018-06-30 23:58:45,2018-07-01 00:01:22,3380,157,240,Sheridan Rd & Irving Park Rd,254,Pine Grove Ave & Irving Park Rd,Subscriber,Male,1984
+19244612,2018-06-30 23:58:42,2018-07-01 00:01:52,839,190,256,Broadway & Sheridan Rd,232,Pine Grove Ave & Waveland Ave,Subscriber,Male,1988
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
