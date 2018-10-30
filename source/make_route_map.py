@@ -42,6 +42,7 @@ def get_ox_graph_from_bbox(station_extremes, type):
                               network_type=type)
 
 def find_nearest_nodes(graph, trip):
+    print('trip type in find nearest nodes:', type(trip))
     orig_lat_lon = (trip.at['Start_Latitude'], trip.at['Start_Longitude'])
     target_lat_lon = (trip.at['End_Latitude'], trip.at['End_Longitude'])
     return {
@@ -50,7 +51,7 @@ def find_nearest_nodes(graph, trip):
     }
 
 def find_route(graph, endpoints):
-    return nx.shortest_path(G=graph, source=endpoints['orig_node'], target=endpoints['target_node'], weight='length')
+    return
 
 def route_trip_on_folium_map(graph, route):
     return ox.plot_route_folium(graph, route)
@@ -63,8 +64,8 @@ def make_graph(stations):
     return get_ox_graph_from_bbox(station_extremes, 'bike')
 
 def find_route(graph, trip):
-    start_and_stop_nodes = find_nearest_nodes(graph, trip)
-    return find_route(graph, start_and_stop_nodes)
+    endpoints = find_nearest_nodes(graph, trip)
+    return nx.shortest_path(G=graph, source=endpoints['orig_node'], target=endpoints['target_node'], weight='length')
 
 def route_random_trip_on_folium_map():
     trips = get_and_format_trip_data('/Users/Drevets/PycharmProjects/hot-bikes/resources/Divvy_Trips_2018_06.csv')
