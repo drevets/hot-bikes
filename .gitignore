@@ -1,3 +1,2 @@
-.idea/
-*.html
-*.pyc
+.env
+/.idea/*

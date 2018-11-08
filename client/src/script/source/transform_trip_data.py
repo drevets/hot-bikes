@@ -1,4 +1,4 @@
-from source.get_trip_and_station_data import get_and_format_trip_data, get_station_list
+from client.src.script import get_and_format_trip_data, get_station_list
 
 def add_path_station_locations(paths, locations):
     """
