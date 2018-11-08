@@ -1,15 +1,24 @@
-//import React, { Component } from 'react';
-//import __map_html from '../../../script/one_trip.html';
-//const map_template = {__map_html: __html };
-//
-//class Map extends Component {
-//  render() {
-//    return (
-//        <div dangerouslySetInnerHTML={map_template} />
-//    );
-//  }
-//}
-//
-//export default Map;
-//
-////to do —how can I display my html map here
+import React, { Component } from 'react';
+import Button from './Button'
+import map_html from './one_trip.html';
+import axios from 'axios'
+
+class Map extends Component {
+    handleClick = async () => {
+        console.log('thanks for clicking! ')
+        const { data } = await axios.get('/api')
+        console.log('data', data)
+    }
+
+    render() {
+        return (
+            <div>
+                <h2>This is supposed to be a map</h2>
+                <div dangerouslySetInnerHTML={{__html: map_html}}/>
+                <Button text='Get a random trip' onClick={this.handleClick} />
+            </div>
+        )
+    }
+ }
+
+export default Map;
