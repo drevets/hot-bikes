@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock
 import pandas as pd
 
-from source.get_trip_and_station_data import get_and_format_trip_data
+from client.src.script import get_and_format_trip_data
 
 class ScriptTests(unittest.TestCase):
     def test__get_and_format_trip_data__always__returns_correct(self):

@@ -1,7 +1,7 @@
-from source.transform_trip_data import get_trips, identify_discrete_trips, filter_trips_by_hour, \
+from client.src.script.source.transform_trip_data import get_trips, identify_discrete_trips, filter_trips_by_hour, \
     get_and_format_station_data, format_and_clean_path_data, add_lat_and_lon_to_path_data_frame, count_trips, filter_trips_by_count
 
-from source.create_and_manipulate_map_image_data import find_max_and_min_lat_and_lon, create_map_image_data, make_map_image_overlay, \
+from client.src.script.source.create_and_manipulate_map_image_data import find_max_and_min_lat_and_lon, create_map_image_data, make_map_image_overlay, \
     get_aspect_ratio_and_return_delta_lat, make_folium_map
 
 

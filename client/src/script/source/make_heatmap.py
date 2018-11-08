@@ -1,5 +1,5 @@
 import folium
-from source.get_trip_and_station_data import get_and_format_trip_data, get_station_list, add_lat_and_lon_to_trips
+from client.src.script import get_and_format_trip_data, get_station_list, add_lat_and_lon_to_trips
 
 def create_heatmap_list(trips_df):
     '''

@@ -1,7 +1,7 @@
 import unittest
 import pandas as pd
 
-from source.transform_trip_data import add_path_station_locations, identify_discrete_trips
+from client.src.script.source.transform_trip_data import add_path_station_locations, identify_discrete_trips
 
 class ScriptTests(unittest.TestCase):
 
