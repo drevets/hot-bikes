@@ -1,15 +1,13 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Hot Bikes</title>
-  </head>
-  <body>
-    <p>There will be a map here, one day.</p>
+{% block header %}
+  <h1>A Trip</h1>
+{% endblock %}
+
+{% block content %}
     <form method="post">
       <label for="age">Age</label>
       <input name="age" id="age" value="{{ request.form['age'] }}">
       <input type="submit" value="Search">
     </form>
-  </body>
-</html>
+{% endblock %}
+
+{% extends 'one_trip.html' %}
