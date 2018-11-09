@@ -1,7 +1,7 @@
 import numpy as np
 import folium
 
-from client.src.script.source.create_image_data import to_image, get_image_data, add_alpha
+from source.create_image_data import to_image, get_image_data, add_alpha
 
 
 def find_max_and_min_lat_and_lon(trips):

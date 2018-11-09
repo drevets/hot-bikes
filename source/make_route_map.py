@@ -1,7 +1,7 @@
 import random
 import osmnx as ox
 import networkx as nx
-from get_trip_and_station_data import get_and_format_trip_data, get_station_list
+from source.get_trip_and_station_data import get_and_format_trip_data, get_station_list
 
 
 def add_station_locations_to_trips(trips, stations):
