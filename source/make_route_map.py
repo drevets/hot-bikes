@@ -1,7 +1,7 @@
 import random
 import osmnx as ox
 import networkx as nx
-from get_trip_and_station_data import get_and_format_trip_data, get_station_list
+from source.get_trip_and_station_data import get_and_format_trip_data, get_station_list
 
 
 def add_station_locations_to_trips(trips, stations):
@@ -75,7 +75,7 @@ def route_random_trip_on_folium_map():
     graph = make_graph(stations)
     route = find_route(graph, trip)
     folium_route = route_trip_on_folium_map(graph, route)
-    save_route_map_to_html(folium_route, 'one_trip.html')
+    save_route_map_to_html(folium_route, '/Users/Drevets/PycharmProjects/hot-bikes/app/templates/one_trip.html')
 
 
 route_random_trip_on_folium_map()
