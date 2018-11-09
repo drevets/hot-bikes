@@ -6,5 +6,10 @@
   </head>
   <body>
     <p>There will be a map here, one day.</p>
+    <form method="post">
+      <label for="age">Age</label>
+      <input name="age" id="age" value="{{ request.form['age'] }}">
+      <input type="submit" value="Search">
+    </form>
   </body>
 </html>
