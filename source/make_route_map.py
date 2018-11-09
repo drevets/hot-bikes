@@ -50,9 +50,6 @@ def find_nearest_nodes(graph, trip):
         'target_node': ox.get_nearest_node(graph, target_lat_lon, method='euclidean')
     }
 
-def find_route(graph, endpoints):
-    return
-
 def route_trip_on_folium_map(graph, route):
     return ox.plot_route_folium(graph, route)
 
