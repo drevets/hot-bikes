@@ -1,7 +1,5 @@
-import random
 import osmnx as ox
 import networkx as nx
-import numpy as np
 import pandas as pd
 import folium
 from get_trip_and_station_data import get_and_format_trip_data, get_station_list
@@ -24,8 +22,6 @@ def add_station_locations_to_trips(trips, stations):
 
     return trips_with_start_and_stop_locations
 
-def pick_trip_at_random(trips):
-    return trips.iloc[random.randint(0, (len(trips.index) + 1))]
 
 def find_extent_of_area(stations):
     westernmost_station = stations.loc[stations['longitude'].idxmin()]
@@ -39,10 +35,12 @@ def find_extent_of_area(stations):
         'south_lat': southernmost_station.at['latitude']
     }
 
+
 def get_ox_graph_from_bbox(station_extremes, type):
     return ox.graph_from_bbox(station_extremes['north_lat'], station_extremes['south_lat'],
                               station_extremes['east_lon'], station_extremes['west_lon'],
                               network_type=type)
+
 
 def find_nearest_nodes(graph, trip):
     orig_lat_lon = (trip.at['Start_Latitude'], trip.at['Start_Longitude'])
@@ -52,70 +50,32 @@ def find_nearest_nodes(graph, trip):
         'target_node': ox.get_nearest_node(graph, target_lat_lon, method='euclidean')
     }
 
-def route_trip_on_folium_map(graph, route):
-    return ox.plot_route_folium(graph, route)
-
-def save_route_map_to_html(folium_route, filename):
-    folium_route.save(filename)
 
 def make_graph(stations):
     station_extremes = find_extent_of_area(stations)
     return get_ox_graph_from_bbox(station_extremes, 'bike')
 
+
 def find_route(graph, trip):
     endpoints = find_nearest_nodes(graph, trip)
     return nx.shortest_path(G=graph, source=endpoints['orig_node'], target=endpoints['target_node'], weight='length')
 
-def add_routes_to_trips(trips, graph):
-    routes_array = []
-    for index, trip in trips.iterrows():
-        routes_array.append({'trip_id': trip['trip_id'], 'route': find_route(graph, trip)})
-        print('one done', index)
-    routes_df = pd.DataFrame(routes_array)
-    trips_with_routes = trips.merge(routes_df, on='trip_id')
-    return trips_with_routes
 
 def find_intersecting_route(trips, graph, user_route):
     for index, trip in trips.iterrows():
-        print('checking trip with index', index)
         candidate_route = find_route(graph, trip)
-        print('found candidate route')
         if does_route_intersect(user_route, candidate_route):
-            print('yep, we have an intersection')
             return candidate_route
     else:
         raise Exception('No intersecting route found')
 
+
 def does_route_intersect(user_route, candidate_route):
-    print('checking route')
     route_set = set(user_route)
     candidate_set= set(candidate_route)
     intersecting_nodes = route_set.intersection(candidate_set)
     return bool(intersecting_nodes)
 
-
-def route_random_trip_on_folium_map():
-    trips = get_and_format_trip_data('/Users/Drevets/PycharmProjects/hot-bikes/resources/Divvy_Trips_2018_06.csv')
-    stations = get_station_list()
-    trips_with_start_and_stop_locations = add_station_locations_to_trips(trips, stations)
-    trip = pick_trip_at_random(trips_with_start_and_stop_locations)
-    graph = make_graph(stations)
-    route = find_route(graph, trip)
-    folium_route = route_trip_on_folium_map(graph, route)
-    save_route_map_to_html(folium_route, '/Users/Drevets/PycharmProjects/hot-bikes/app/templates/one_trip.html')
-
-def find_intersecting_trip(route, trips):
-    '''takes a series object, or whatever the pandas term is for just a row'''
-    print('looking for this route', route)
-    for index, trip in trips.iterrows():
-        route_set = set(route)
-        target_route_set = set(trip['route'])
-        print('target_route_set', target_route_set)
-        intersecting_nodes = route_set.intersection(target_route_set)
-        if bool(intersecting_nodes):
-            print('match found')
-            return {'trip': trip, 'matching_nodes': intersecting_nodes}
-    return False
 
 def make_route(start_station, end_station, graph):
     stations = pd.DataFrame(get_station_list())
@@ -128,20 +88,23 @@ def make_route(start_station, end_station, graph):
     route = nx.shortest_path(G=graph, source=start_node, target=end_node, weight='length')
     return route
 
+
 def filter_trips(trips, hour, gender):
     trips = trips.loc[trips['hour'] == hour]
     trips = trips.loc[trips['gender'] == gender]
     return trips
 
+
 def convert_nodes_to_lat_and_lon(graph, route):
-    '''I want this to spit out an array to then put into folium'''
     route_coords = []
     for node in route:
         route_coords.append((graph.node[node]['y'], graph.node[node]['x']))
     return route_coords
 
+
 def create_folium_polylines(route_array):
     return folium.PolyLine(route_array)
+
 
 def find_center_of_route(route):
     avg_lat = 0
@@ -151,29 +114,35 @@ def find_center_of_route(route):
         avg_lon += lon
     return (avg_lat / len(route), avg_lon / len(route))
 
+
 def create_folium_map(map_center):
     folium_map = folium.Map(location=map_center,
-               zoom_start=15,
+               zoom_start=13,
                tiles="CartoDB dark_matter")
     return folium_map
+
 
 def add_lines_to_folium_map(map, lines):
     lines.add_to(map)
     return map
 
-trips = get_and_format_trip_data('/Users/Drevets/PycharmProjects/hot-bikes/resources/Divvy_Trips_2018_06.csv')
-stations = get_station_list()
-trips_with_start_and_stop_locations = add_station_locations_to_trips(trips, stations) # might be able to switch these steps
-trips = filter_trips(trips_with_start_and_stop_locations, 9, 'Female')
-graph = make_graph(stations)
-user_route = make_route("Buckingham Fountain", "Greenview Ave & Fullerton Ave", graph)
-intersecting_route = find_intersecting_route(trips, graph, user_route)
-intersecting_route_coords = convert_nodes_to_lat_and_lon(graph, intersecting_route)
-user_route_coords = convert_nodes_to_lat_and_lon(graph, user_route)
-intersecting_route_center = find_center_of_route(intersecting_route_coords)
-user_route_center = find_center_of_route(user_route_coords)
-center_of_intersecting_routes = find_center_of_route([intersecting_route_center, user_route_center])
-polylines = create_folium_polylines([[intersecting_route_coords], [user_route_coords]])
-map = create_folium_map(center_of_intersecting_routes)
-line_map = add_lines_to_folium_map(map, polylines)
-line_map.save('line_map.html')
+
+def find_intersecting_routes_and_save_map_hmtl():
+    trips = get_and_format_trip_data('/Users/Drevets/PycharmProjects/hot-bikes/resources/Divvy_Trips_2018_06.csv')
+    stations = get_station_list()
+    trips_with_start_and_stop_locations = add_station_locations_to_trips(trips, stations) # might be able to switch these steps
+    trips = filter_trips(trips_with_start_and_stop_locations, 9, 'Female')
+    graph = make_graph(stations)
+    user_route = make_route("Buckingham Fountain", "Greenview Ave & Fullerton Ave", graph)
+    intersecting_route = find_intersecting_route(trips, graph, user_route)
+    intersecting_route_coords = convert_nodes_to_lat_and_lon(graph, intersecting_route)
+    user_route_coords = convert_nodes_to_lat_and_lon(graph, user_route)
+    intersecting_route_center = find_center_of_route(intersecting_route_coords)
+    user_route_center = find_center_of_route(user_route_coords)
+    center_of_intersecting_routes = find_center_of_route([intersecting_route_center, user_route_center])
+    polylines = create_folium_polylines([[intersecting_route_coords], [user_route_coords]])
+    folium_map = create_folium_map(center_of_intersecting_routes)
+    line_map = add_lines_to_folium_map(folium_map, polylines)
+    line_map.save('/Users/Drevets/PycharmProjects/hot-bikes/app/templates/line_map.html')
+
+find_intersecting_routes_and_save_map_hmtl()
