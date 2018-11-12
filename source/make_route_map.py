@@ -3,7 +3,6 @@ import networkx as nx
 import pandas as pd
 import folium
 import random
-from get_trip_and_station_data import get_and_format_trip_data, get_station_list
 
 
 def add_station_locations_to_trips(trips, stations):
@@ -82,8 +81,7 @@ def does_route_intersect(user_route, candidate_route):
     return bool(intersecting_nodes)
 
 
-def make_route(start_station, end_station, graph):
-    stations = pd.DataFrame(get_station_list())
+def make_route(stations, start_station, end_station, graph):
     start_station_lat_and_lon = (stations.loc[stations['stationName'] == start_station, 'latitude'].values[0],
                                  stations.loc[stations['stationName'] == start_station, 'longitude'].values[0])
     end_station_lat_and_lon = (stations.loc[stations['stationName'] == end_station, 'latitude'].values[0],
@@ -107,10 +105,6 @@ def convert_nodes_to_lat_and_lon(graph, route):
     return route_coords
 
 
-def create_folium_polylines(route_array):
-    return folium.PolyLine(route_array)
-
-
 def find_center_of_route(route):
     avg_lat = 0
     avg_lon = 0
@@ -123,32 +117,34 @@ def find_center_of_route(route):
 def create_folium_map(map_center):
     folium_map = folium.Map(location=map_center,
                zoom_start=13,
-               tiles="CartoDB dark_matter")
+               tiles="cartodbpositron",
+                width='75%',
+                height='75%')
     return folium_map
 
 
-def add_lines_to_folium_map(map, lines):
-    lines.add_to(map)
-    return map
-
-
-def find_intersecting_routes_and_save_map_html():
-    trips = pd.read_pickle('/Users/Drevets/PycharmProjects/hot-bikes/resources/bike_trips.pkl')
-    stations = pd.read_pickle('/Users/Drevets/PycharmProjects/hot-bikes/resources/stations.pkl')
-    trips_with_start_and_stop_locations = add_station_locations_to_trips(trips, stations)
-    trips = filter_trips(trips_with_start_and_stop_locations, 9, 'Female')
-    graph = nx.read_gpickle('/Users/Drevets/PycharmProjects/hot-bikes/resources/chicago_graph.pkl')
-    user_route = make_route("Buckingham Fountain", "Greenview Ave & Fullerton Ave", graph)
-    intersecting_route = find_intersecting_route(trips, graph, user_route)
+def make_folium_map_with_polylines(graph, user_route, intersecting_route, user_color, intersecting_route_color):
     intersecting_route_coords = convert_nodes_to_lat_and_lon(graph, intersecting_route)
     user_route_coords = convert_nodes_to_lat_and_lon(graph, user_route)
+    user_route_polyline = folium.PolyLine(user_route_coords, color=user_color)
+    intersecting_route_polyline = folium.PolyLine(intersecting_route_coords, color=intersecting_route_color)
     intersecting_route_center = find_center_of_route(intersecting_route_coords)
     user_route_center = find_center_of_route(user_route_coords)
     center_of_intersecting_routes = find_center_of_route([intersecting_route_center, user_route_center])
-    polylines = create_folium_polylines([[intersecting_route_coords], [user_route_coords]])
     folium_map = create_folium_map(center_of_intersecting_routes)
-    line_map = add_lines_to_folium_map(folium_map, polylines)
+    intersecting_route_polyline.add_to(folium_map)
+    user_route_polyline.add_to(folium_map)
+    return folium_map
+
+
+def find_intersecting_routes_and_save_map_html(gender, hour, start_station, end_station):
+    print('calling and finding intersecting routes and saving the map')
+    trips = pd.read_pickle('/Users/Drevets/PycharmProjects/hot-bikes/resources/bike_trips.pkl')
+    stations = pd.read_pickle('/Users/Drevets/PycharmProjects/hot-bikes/resources/stations.pkl')
+    graph = nx.read_gpickle('/Users/Drevets/PycharmProjects/hot-bikes/resources/chicago_graph.pkl')
+    trips_with_start_and_stop_locations = add_station_locations_to_trips(trips, stations)
+    trips = filter_trips(trips_with_start_and_stop_locations, hour, gender)
+    user_route = make_route(stations, start_station, end_station, graph)
+    intersecting_route = find_intersecting_route(trips, graph, user_route)
+    line_map = make_folium_map_with_polylines(graph, user_route, intersecting_route, '#41f4ca', '#d69a2a')
     line_map.save('/Users/Drevets/PycharmProjects/hot-bikes/app/templates/line_map.html')
-
-
-find_intersecting_routes_and_save_map_html()

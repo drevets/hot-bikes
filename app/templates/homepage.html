@@ -4,10 +4,28 @@
 
 {% block content %}
     <form method="post">
-      <label for="age">Age</label>
-      <input name="age" id="age" value="{{ request.form['age'] }}">
+        <label for="gender">Preferred Gender</label>
+      <select id='gender' name='gender' value="{{ request.form['gender'] }}">
+        <option value="Either/Or">Either / Or</option>
+        <option value="Female">Female</option>
+        <option value="Male">Male</option>
+      </select>
+        <label for="start_station">Start Station</label>
+        <select id="start_station" name="start_station" value="{{ request.form['start_station'] }}">
+            {% for station in stations %}
+                <option value="{{ station }}">{{ station }}</option>
+            {% endfor %}
+        </select>
+         <label for="end_station">End Station</label>
+        <select id="end_station" name="end_station" value="{{ request.form['end_station'] }}">
+            {% for station in stations %}
+                <option value="{{ station }}">{{ station }}</option>
+            {% endfor %}
+        </select>
+        <label for="time">What time do you ride?</label>
+        <input id="time" type="time" name="time" value="{{ request.form['time'] }}">
       <input type="submit" value="Search">
     </form>
 {% endblock %}
 
-{% extends 'one_trip.html' %}
+{% extends 'chicago_map.html' %}

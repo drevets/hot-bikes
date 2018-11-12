@@ -1,0 +1,13 @@
+{% block header %}
+  <h1>We found a match!</h1>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+      <label for="age">Age</label>
+      <input name="age" id="age" value="{{ request.form['age'] }}">
+      <input type="submit" value="Search">
+    </form>
+{% endblock %}
+
+{% extends 'line_map.html' %}
