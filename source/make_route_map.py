@@ -19,7 +19,6 @@ def add_station_locations_to_trips(trips, stations):
         columns=['altitude', 'availableBikes', 'availableDocks', 'city', 'is_renting', 'kioskType',
                  'landMark', 'lastCommunicationTime', 'location', 'postalCode', 'stAddress1', 'stAddress2', 'stationName',
                  'status', 'statusKey', 'statusValue', 'testStation', 'totalDocks'])
-
     return trips_with_start_and_stop_locations
 
 
@@ -53,7 +52,9 @@ def find_nearest_nodes(graph, trip):
 
 def make_graph(stations):
     station_extremes = find_extent_of_area(stations)
-    return get_ox_graph_from_bbox(station_extremes, 'bike')
+    chicago_graph = get_ox_graph_from_bbox(station_extremes, 'bike')
+    nx.write_gpickle(chicago_graph, '/Users/Drevets/PycharmProjects/hot-bikes/resources/chicago_graph.pkl')
+    return chicago_graph
 
 
 def find_route(graph, trip):
@@ -127,12 +128,12 @@ def add_lines_to_folium_map(map, lines):
     return map
 
 
-def find_intersecting_routes_and_save_map_hmtl():
-    trips = get_and_format_trip_data('/Users/Drevets/PycharmProjects/hot-bikes/resources/Divvy_Trips_2018_06.csv')
-    stations = get_station_list()
-    trips_with_start_and_stop_locations = add_station_locations_to_trips(trips, stations) # might be able to switch these steps
+def find_intersecting_routes_and_save_map_html():
+    trips = pd.read_pickle('/Users/Drevets/PycharmProjects/hot-bikes/resources/bike_trips.pkl')
+    stations = pd.read_pickle('/Users/Drevets/PycharmProjects/hot-bikes/resources/stations.pkl')
+    trips_with_start_and_stop_locations = add_station_locations_to_trips(trips, stations)
     trips = filter_trips(trips_with_start_and_stop_locations, 9, 'Female')
-    graph = make_graph(stations)
+    graph = nx.read_gpickle('/Users/Drevets/PycharmProjects/hot-bikes/resources/chicago_graph.pkl')
     user_route = make_route("Buckingham Fountain", "Greenview Ave & Fullerton Ave", graph)
     intersecting_route = find_intersecting_route(trips, graph, user_route)
     intersecting_route_coords = convert_nodes_to_lat_and_lon(graph, intersecting_route)
@@ -145,4 +146,5 @@ def find_intersecting_routes_and_save_map_hmtl():
     line_map = add_lines_to_folium_map(folium_map, polylines)
     line_map.save('/Users/Drevets/PycharmProjects/hot-bikes/app/templates/line_map.html')
 
-find_intersecting_routes_and_save_map_hmtl()
+
+find_intersecting_routes_and_save_map_html()
