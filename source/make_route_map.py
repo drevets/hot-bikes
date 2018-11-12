@@ -2,6 +2,7 @@ import osmnx as ox
 import networkx as nx
 import pandas as pd
 import folium
+import random
 from get_trip_and_station_data import get_and_format_trip_data, get_station_list
 
 
@@ -20,6 +21,9 @@ def add_station_locations_to_trips(trips, stations):
                  'landMark', 'lastCommunicationTime', 'location', 'postalCode', 'stAddress1', 'stAddress2', 'stationName',
                  'status', 'statusKey', 'statusValue', 'testStation', 'totalDocks'])
     return trips_with_start_and_stop_locations
+
+def pick_trip_at_random(trips):
+    return trips.iloc[random.randint(0, (len(trips.index) + 1))]
 
 
 def find_extent_of_area(stations):
