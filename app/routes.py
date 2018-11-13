@@ -16,11 +16,6 @@ def homepage():
         start_station = request.form['start_station']
         end_station = request.form['end_station']
         hour = get_hour_from_time_string(request.form['time'])
-        print('the type of time', type(hour))
-        print('This is your preferred gender', gender)
-        print('This is your start station', start_station)
-        print('This is your end station', end_station)
-        print('this is your time', hour)
         find_intersecting_routes_and_save_map_html(gender, hour, start_station, end_station)
         return redirect(location='/intersect')
 
