@@ -1,6 +1,7 @@
 import folium
 from source.get_trip_and_station_data import get_and_format_trip_data, get_station_list
 import pandas as pd
+import random
 
 
 def make_chicago_map():
@@ -23,3 +24,10 @@ def make_station_list():
 def get_hour_from_time_string(time_str):
     [hour, minute] = time_str.split(':')
     return int(hour)
+
+def sanitize_gender(gender):
+    if gender == 'None':
+        if random.randint(0, 1) == 1:
+            return 'Female'
+        return 'Male'
+    return gender
