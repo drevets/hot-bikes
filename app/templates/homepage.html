@@ -1,14 +1,24 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<div id="app">
 {% block header %}
-  <h1>A Trip</h1>
+<div class="header">
+    <h1>Divvy Dating</h1>
+      <h4 id="tagline">Who have you crossed paths with?</h4>
+    <div id="info">
+        <p>You love bike sharing and riding your bike in Chicago. Wouldn't it be nice if there were someone out there who loved the same things?</p>
+        <p>Divvy Dating is here to help. Enter in a route you take frequently, roughly the time you usually take it, and the kind of person you'd most like to ride bikes with.</p>
+        <p>Then, we'll do the rest and find out if you've crossed paths with someone else.</p>
+    </div>
+</div>
 {% endblock %}
 
 {% block content %}
     <form method="post">
-        <label for="gender">Preferred Gender</label>
+        <label for="gender">Looking for a ...</label>
       <select id='gender' name='gender' value="{{ request.form['gender'] }}">
-        <option value="Either/Or">Either / Or</option>
-        <option value="Female">Female</option>
-        <option value="Male">Male</option>
+        <option value="None">Don't Care</option>
+        <option value="Female">Woman</option>
+        <option value="Male">Man</option>
       </select>
         <label for="start_station">Start Station</label>
         <select id="start_station" name="start_station" value="{{ request.form['start_station'] }}">
@@ -22,6 +32,7 @@
                 <option value="{{ station }}">{{ station }}</option>
             {% endfor %}
         </select>
+        <br>
         <label for="time">What time do you ride?</label>
         <input id="time" type="time" name="time" value="{{ request.form['time'] }}">
       <input type="submit" value="Search">
@@ -29,3 +40,5 @@
 {% endblock %}
 
 {% extends 'chicago_map.html' %}
+
+</div>

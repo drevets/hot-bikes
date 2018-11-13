@@ -73,12 +73,20 @@ def find_intersecting_route(trips, graph, user_route):
     else:
         raise Exception('No intersecting route found')
 
+def find_intersecting_trip(trips, graph, user_route):
+    for index, trip in trips.iterrows():
+        candidate_route = find_route(graph, trip)
+        intersecting_node = does_route_intersect(user_route, candidate_route)
+        if intersecting_node:
+            return [trip, candidate_route, intersecting_node]
+    else:
+        raise Exception('No intersecting route found')
+
 
 def does_route_intersect(user_route, candidate_route):
     route_set = set(user_route)
     candidate_set= set(candidate_route)
-    intersecting_nodes = route_set.intersection(candidate_set)
-    return bool(intersecting_nodes)
+    return route_set.intersection(candidate_set)
 
 
 def make_route(stations, start_station, end_station, graph):
@@ -101,6 +109,7 @@ def filter_trips(trips, hour, gender):
 def convert_nodes_to_lat_and_lon(graph, route):
     route_coords = []
     for node in route:
+        print(graph.node[node])
         route_coords.append((graph.node[node]['y'], graph.node[node]['x']))
     return route_coords
 
@@ -121,6 +130,28 @@ def create_folium_map(map_center):
                 width='75%',
                 height='75%')
     return folium_map
+
+
+def extract_trip_data(trip):
+    start_time = trip['start_time']
+    day_name = start_time.day()
+    day = start_time.day
+    year = start_time.year
+    month = start_time.month_name()
+    hour = start_time.hour
+    minute = start_time.minute
+    time = sanitize_time(hour, minute)
+    date_string = "{}, {} {}, {}, at approximately {} o'clock".format(day_name, month, day, year, time)
+    return {
+        'gender': trip['gender'],
+        'date_string': date_string,
+        'age': pd.Timestamp.now().year - trip['birthyear']
+    }
+
+def sanitize_time(hour, minute):
+    if hour - 12 > 0:
+        return '{}:{} PM'.format(hour - 12, minute)
+    return '{}:{} AM'.format(hour, minute)
 
 
 def make_folium_map_with_polylines(graph, user_route, intersecting_route, user_color, intersecting_route_color):
@@ -145,6 +176,8 @@ def find_intersecting_routes_and_save_map_html(gender, hour, start_station, end_
     trips_with_start_and_stop_locations = add_station_locations_to_trips(trips, stations)
     trips = filter_trips(trips_with_start_and_stop_locations, hour, gender)
     user_route = make_route(stations, start_station, end_station, graph)
-    intersecting_route = find_intersecting_route(trips, graph, user_route)
+    # intersecting_route = find_intersecting_route(trips, graph, user_route)
+    [intersecting_trip, intersecting_route, intersecting_node] = find_intersecting_trip(trips, graph, user_route)
+    trip_data = extract_trip_data(intersecting_trip)
     line_map = make_folium_map_with_polylines(graph, user_route, intersecting_route, '#41f4ca', '#d69a2a')
     line_map.save('/Users/Drevets/PycharmProjects/hot-bikes/app/templates/line_map.html')
