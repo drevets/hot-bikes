@@ -134,24 +134,32 @@ def create_folium_map(map_center):
 
 def extract_trip_data(trip):
     start_time = trip['start_time']
-    day_name = start_time.day()
+    day_name = start_time.day_name()
     day = start_time.day
     year = start_time.year
     month = start_time.month_name()
     hour = start_time.hour
     minute = start_time.minute
     time = sanitize_time(hour, minute)
-    date_string = "{}, {} {}, {}, at approximately {} o'clock".format(day_name, month, day, year, time)
+    date_string = "{}, {} {}, {}, at approximately {}".format(day_name, month, day, year, time)
     return {
-        'gender': trip['gender'],
-        'date_string': date_string,
-        'age': pd.Timestamp.now().year - trip['birthyear']
+        'gender': humanize_gender(trip['gender']),
+        'date': date_string,
+        'age':  get_age(trip['birthyear'])
     }
+
+def get_age(birthyear):
+    return int(pd.Timestamp.now().year - birthyear)
 
 def sanitize_time(hour, minute):
     if hour - 12 > 0:
         return '{}:{} PM'.format(hour - 12, minute)
     return '{}:{} AM'.format(hour, minute)
+
+def humanize_gender(gender):
+    if gender == 'Female':
+        return 'woman'
+    return 'man'
 
 
 def make_folium_map_with_polylines(graph, user_route, intersecting_route, user_color, intersecting_route_color):
@@ -179,5 +187,6 @@ def find_intersecting_routes_and_save_map_html(gender, hour, start_station, end_
     # intersecting_route = find_intersecting_route(trips, graph, user_route)
     [intersecting_trip, intersecting_route, intersecting_node] = find_intersecting_trip(trips, graph, user_route)
     trip_data = extract_trip_data(intersecting_trip)
-    line_map = make_folium_map_with_polylines(graph, user_route, intersecting_route, '#41f4ca', '#d69a2a')
+    line_map = make_folium_map_with_polylines(graph, user_route, intersecting_route, '#db2c29', '#2142c6')
     line_map.save('/Users/Drevets/PycharmProjects/hot-bikes/app/templates/line_map.html')
+    return trip_data
