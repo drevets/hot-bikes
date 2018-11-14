@@ -3,6 +3,8 @@ import networkx as nx
 import pandas as pd
 import folium
 import random
+import requests
+import os
 
 
 def add_station_locations_to_trips(trips, stations):
@@ -65,20 +67,12 @@ def find_route(graph, trip):
     return nx.shortest_path(G=graph, source=endpoints['orig_node'], target=endpoints['target_node'], weight='length')
 
 
-def find_intersecting_route(trips, graph, user_route):
-    for index, trip in trips.iterrows():
-        candidate_route = find_route(graph, trip)
-        if does_route_intersect(user_route, candidate_route):
-            return candidate_route
-    else:
-        raise Exception('No intersecting route found')
-
 def find_intersecting_trip(trips, graph, user_route):
     for index, trip in trips.iterrows():
         candidate_route = find_route(graph, trip)
-        intersecting_node = does_route_intersect(user_route, candidate_route)
-        if intersecting_node:
-            return [trip, candidate_route, intersecting_node]
+        intersecting_node_set = does_route_intersect(user_route, candidate_route)
+        if intersecting_node_set:
+            return [trip, candidate_route, intersecting_node_set]
     else:
         raise Exception('No intersecting route found')
 
@@ -109,7 +103,6 @@ def filter_trips(trips, hour, gender):
 def convert_nodes_to_lat_and_lon(graph, route):
     route_coords = []
     for node in route:
-        print(graph.node[node])
         route_coords.append((graph.node[node]['y'], graph.node[node]['x']))
     return route_coords
 
@@ -161,6 +154,16 @@ def humanize_gender(gender):
         return 'woman'
     return 'man'
 
+def reverse_geocode_node(graph, node):
+    lat = graph.node[node]['y']
+    lng = graph.node[node]['x']
+    response = requests.get('https://maps.googleapis.com/maps/api/geocode/json?latlng={},{}&key={}'
+                            .format(lat, lng, os.environ.get('GOOGLE_MAPS_API_KEY')))
+    response_data = response.json()
+    results = response_data['results']
+    formatted_address = results[0]['formatted_address']
+    street_address = formatted_address.split(',')[0]
+    return street_address
 
 def make_folium_map_with_polylines(graph, user_route, intersecting_route, user_color, intersecting_route_color):
     intersecting_route_coords = convert_nodes_to_lat_and_lon(graph, intersecting_route)
@@ -184,9 +187,10 @@ def find_intersecting_routes_and_save_map_html(gender, hour, start_station, end_
     trips_with_start_and_stop_locations = add_station_locations_to_trips(trips, stations)
     trips = filter_trips(trips_with_start_and_stop_locations, hour, gender)
     user_route = make_route(stations, start_station, end_station, graph)
-    # intersecting_route = find_intersecting_route(trips, graph, user_route)
-    [intersecting_trip, intersecting_route, intersecting_node] = find_intersecting_trip(trips, graph, user_route)
+    [intersecting_trip, intersecting_route, intersecting_node_set] = find_intersecting_trip(trips, graph, user_route)
+    intersecting_node = intersecting_node_set.pop()
     trip_data = extract_trip_data(intersecting_trip)
+    trip_data['location'] = reverse_geocode_node(graph, intersecting_node)
     line_map = make_folium_map_with_polylines(graph, user_route, intersecting_route, '#db2c29', '#2142c6')
     line_map.save('/Users/Drevets/PycharmProjects/hot-bikes/app/templates/line_map.html')
     return trip_data

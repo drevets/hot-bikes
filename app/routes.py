@@ -20,7 +20,8 @@ def homepage():
         return redirect(url_for('index.intersect',
                                 gender=trip_data['gender'],
                                 years=trip_data['age'],
-                                date=trip_data['date']))
+                                date=trip_data['date'],
+                                location=trip_data['location']))
 
 @bp.route('/intersect', methods=('GET', 'POST'))
 def intersect():
@@ -28,9 +29,11 @@ def intersect():
         gender = request.args['gender']
         years = request.args['years']
         date = request.args['date']
+        location = request.args['location']
         return render_template('intersecting_routes.html',
                                gender=gender,
                                years=years,
-                               date=date)
+                               date=date,
+                               location=location)
     elif request.method == 'POST':
         return redirect('/')
