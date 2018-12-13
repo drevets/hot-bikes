@@ -127,6 +127,7 @@ def create_folium_map(map_center):
 
 def extract_trip_data(trip):
     start_time = trip['start_time']
+    print('*****', start_time)
     day_name = start_time.day_name()
     day = start_time.day
     year = start_time.year
@@ -134,6 +135,7 @@ def extract_trip_data(trip):
     hour = start_time.hour
     minute = start_time.minute
     time = sanitize_time(hour, minute)
+    print(type(trip['birthyear']))
     date_string = "{}, {} {}, {}, at approximately {}".format(day_name, month, day, year, time)
     return {
         'gender': humanize_gender(trip['gender']),
@@ -157,6 +159,8 @@ def humanize_gender(gender):
 def reverse_geocode_node(graph, node):
     lat = graph.node[node]['y']
     lng = graph.node[node]['x']
+    print('https://maps.googleapis.com/maps/api/geocode/json?latlng={},{}&key={}'
+                            .format(lat, lng, os.environ.get('GOOGLE_MAPS_API_KEY')))
     response = requests.get('https://maps.googleapis.com/maps/api/geocode/json?latlng={},{}&key={}'
                             .format(lat, lng, os.environ.get('GOOGLE_MAPS_API_KEY')))
     response_data = response.json()

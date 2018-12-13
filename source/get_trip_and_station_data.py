@@ -28,3 +28,5 @@ def get_station_list():
 
 
 
+trips = get_and_format_trip_data('/Users/Drevets/PycharmProjects/hot-bikes/resources/Divvy_Trips_2018_06.csv')
+print(len(trips))
